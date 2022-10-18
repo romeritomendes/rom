@@ -1,0 +1,67 @@
+version: "3.9"
+
+services:
+  frontend-main:
+    build:
+      context: ./main
+      dockerfile: Dockerfile
+    image: "${COMPOSE_PROJECT_NAME}-main"
+    container_name: "${COMPOSE_PROJECT_NAME}-main"
+    restart: unless-stopped
+    depends_on:
+      - frontend-head
+      - frontend-timesheet
+    ports:
+      - "5100:5100"
+    volumes:
+      - ./main:/home/node/app
+      - node_modules_frontend_main:/home/node/app/node_modules
+    networks:
+      - frontend_network
+    command: npm start
+
+  frontend-head:
+    build:
+      context: ./head
+      dockerfile: Dockerfile
+    image: "${COMPOSE_PROJECT_NAME}-head"
+    container_name: "${COMPOSE_PROJECT_NAME}-head"
+    restart: unless-stopped
+    ports:
+      - "5101:5101"
+    volumes:
+      - ./head:/home/node/app
+      - node_modules_frontend_head:/home/node/app/node_modules
+    networks:
+      - frontend_network
+    command: npm start
+
+  frontend-timesheet:
+    build:
+      context: ./timesheet
+      dockerfile: Dockerfile
+    image: "${COMPOSE_PROJECT_NAME}-timesheet"
+    container_name: "${COMPOSE_PROJECT_NAME}-timesheet"
+    restart: unless-stopped
+    ports:
+      - "5102:5102"
+    volumes:
+      - ./timesheet:/home/node/app
+      - node_modules_frontend_timesheet:/home/node/app/node_modules
+    networks:
+      - frontend_network
+    command: npm start
+
+networks:
+  frontend_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1
+          
+
+volumes:
+  node_modules_frontend_main:
+  node_modules_frontend_head:
+  node_modules_frontend_timesheet:
