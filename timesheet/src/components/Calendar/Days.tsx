@@ -15,12 +15,20 @@ export interface IDays {
     disable:    boolean;
     holiday:    boolean;
     projects:   IProjectWorkDays[];
+    onClick:    () => void;
 }
 
-const Days = ({ dayText, size, disable, holiday, projects }: IDays) => {
+const Days = ({ dayText, size, disable, holiday, projects, onClick }: IDays) => {
     return (
-        <Container size={size} disable={disable} holiday={holiday}>
-            <Text>{dayText}</Text>
+        <Container
+            size={size}
+            disable={disable}
+            holiday={holiday}
+            onClick={onClick}
+        >
+            <Text>
+                {dayText}
+            </Text>
             {projects &&
                 projects.map(
                     project => 
@@ -90,6 +98,8 @@ const Text = styled.b`
     position: absolute;
 
     margin: auto;
+
+    cursor: pointer;
 `;
 
 export default Days;

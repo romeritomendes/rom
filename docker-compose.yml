@@ -52,6 +52,22 @@ services:
       - frontend_network
     command: npm start
 
+  frontend-project:
+    build:
+      context: ./project
+      dockerfile: Dockerfile
+    image: "${COMPOSE_PROJECT_NAME}-project"
+    container_name: "${COMPOSE_PROJECT_NAME}-project"
+    restart: unless-stopped
+    ports:
+      - "5103:5103"
+    volumes:
+      - ./project:/home/node/app
+      - node_modules_frontend_project:/home/node/app/node_modules
+    networks:
+      - frontend_network
+    command: npm start
+
 networks:
   frontend_network:
     driver: bridge
@@ -65,3 +81,4 @@ volumes:
   node_modules_frontend_main:
   node_modules_frontend_head:
   node_modules_frontend_timesheet:
+  node_modules_frontend_project:

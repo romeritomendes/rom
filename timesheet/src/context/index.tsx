@@ -14,6 +14,8 @@ interface IGlobalContext {
     setYear:            (year: string) => void;
     month:              number;
     setMonth:           (month: string) => void;
+    selectedDay:        moment.Moment;
+    setDay:             (day: number) => void,
     projectsWorkDays:   IProjectWorkDays[];
     back:               () => void;
     forward:            () => void;
@@ -25,6 +27,8 @@ const Context = createContext<IGlobalContext>({
     setYear:            () => {},
     month:              0,
     setMonth:           () => {},
+    selectedDay:        moment(),
+    setDay:             () => {},
     projectsWorkDays:   [],
     back:               () => {},
     forward:            () => {},
@@ -39,6 +43,7 @@ export const Provider = ({ children }: PropsWithChildren<IProvider>) => {
     const [year, setYear] = useState<number>(DEFAULT_YEAR);
     const [month, setMonth] = useState<number>(DEFAULT_MONTH);
     const [projects, setProjects] = useState<IProjectWorkDays[]>([]);
+    const [day, setDay] = useState<number>(parseInt(moment().format('DD')));
 
     useEffect(() => {
         setProjects(getProjectWorkDays({ month }));
@@ -66,6 +71,8 @@ export const Provider = ({ children }: PropsWithChildren<IProvider>) => {
             setYear:            year => setYear(Number.parseInt(year)),
             month,
             setMonth:           month => setMonth(Number.parseInt(month)),
+            selectedDay:        moment(`${year}-${month}-${day}`),
+            setDay:             setDay,
             projectsWorkDays:   projects,
             back:               handleBackMonth,
             forward:            handleForwardMonth,

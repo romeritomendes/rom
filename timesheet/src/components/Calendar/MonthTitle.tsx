@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useGlobalContextState } from '../../context';
+import { months } from '../../data/months';
 
 export interface IMonthTitleProps {
     title: string;
@@ -7,11 +9,19 @@ export interface IMonthTitleProps {
     forward: () => void;
 }
 
-export const MonthTitle = ({ title, back, forward }: IMonthTitleProps) => {
+export const MonthTitle = () => {
+
+    const {
+        year,
+        month,
+        back,
+        forward,
+    } = useGlobalContextState();
+    
     return (
         <Container>
             <button onClick={back}>&lt;&lt;</button>
-            <h3>{title}</h3>
+            <h3>{`${months[month-1].title} - ${year}`}</h3>
             <button onClick={forward}>&gt;&gt;</button>
         </Container>
     )
@@ -20,6 +30,7 @@ export const MonthTitle = ({ title, back, forward }: IMonthTitleProps) => {
 const Container = styled.article`
     display: flex;
     flex-direction: row;
+    justify-content: center;
     align-items: center;
 
     gap: 1rem;

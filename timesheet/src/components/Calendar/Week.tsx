@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
 import Days, { IProjectWorkDays } from './Days';
-import { IProjectData } from '../ProjectForm';
+import { useGlobalContextState } from '../../context';
 
 export interface IWeek {
     month:      number;
@@ -21,6 +21,10 @@ interface Idays {
 }
 
 const Week = ({ weekNumber, month, projects }: IWeek) => {
+
+    const {
+        setDay,
+    } = useGlobalContextState();
 
     const mday = moment().day("Sunday").week(weekNumber);
 
@@ -56,6 +60,7 @@ const Week = ({ weekNumber, month, projects }: IWeek) => {
                             disable={day.month !== month}
                             holiday={day.weekDay === 0 || day.weekDay === 6}
                             projects={day.projects}
+                            onClick={() => setDay(day.day)}
                         />
                 )
             }

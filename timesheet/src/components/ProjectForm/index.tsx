@@ -1,9 +1,11 @@
 import moment from 'moment';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
 import { useGlobalContextState } from '../../context';
 
 import { months } from '../../data/months';
+import { Field } from './Field';
+import { FieldRange } from './FieldRange';
 
 export interface IHoursInMonth {
     workday:    number;
@@ -26,14 +28,24 @@ const ProjectForm = () => {
 
     const {
         month,
-        setMonth,
+        selectedDay,
         addProjectWorkDays,
     } = useGlobalContextState();
 
     const [project, setProject] = useState("");
+    const [description, setDescription] = useState("");
     const [hours, setHours] = useState<number>(8);
-    const [dateFrom, setDateFrom] = useState(moment());
-    const [dateTo, setDateTo] = useState(moment());
+    const [dateFrom, setDateFrom] = useState(selectedDay);
+    const [dateTo, setDateTo] = useState(selectedDay);
+
+    // console.log(selectedDay === moment())
+    // console.log(moment().format('YYYY-MM-DD'))
+    console.log(selectedDay.format('YYYY-MM-DD'))
+
+    useEffect(() => {
+        setDateFrom(selectedDay);
+        setDateTo(selectedDay);
+    }, [selectedDay])
 
     const handleSave = () => {
         
@@ -69,31 +81,42 @@ const ProjectForm = () => {
 
     return (
         <Container>
-            <div>
-                <label htmlFor="month">Mês</label>
-                <select name="month" defaultValue={month} onChange={e => setMonth(e.target.value)}>
-                    {months &&
-                        months.map(
-                            row => <option key={row.id} value={row.id}>{row.title}</option>
-                        )
-                    }
-                </select>
-            </div>
-            <div>
-                <label htmlFor="project">Projeto</label>
-                <input type="text" name="project" value={project} onChange={e => setProject(e.target.value)} />
-            </div>
-            <div>
-                <label htmlFor="dataFrom">Data</label>
-                <input type="date" name="dataFrom" value={dateFrom.format('YYYY-MM-DD')} onChange={e => setDateFrom(moment(e.target.value))} />
-                <input type="date" name="dataTo" value={dateTo.format('YYYY-MM-DD')} onChange={e => setDateTo(moment(e.target.value))} />
-            </div>
-            <div>
-                <label htmlFor="hours">Tempo</label>
-                <input type="number" name="hours" value={hours} onChange={e => setHours(parseInt(e.target.value))} />
-            </div>
+            <TitleLine>Adicionar Atividade</TitleLine>
+            <InputLine>
+                <Field
+                    type="text"
+                    name="project"
+                    label="Projeto"
+                    width={10}
+                    value={project}
+                    onChange={value => setProject(value)}
+                />
+                <Field
+                    type="number"
+                    name="hours"
+                    label="Tempo"
+                    width={5}
+                    value={hours.toString()}
+                    onChange={value => setHours(parseInt(value))}
+                />
+            </InputLine>
+            <Field
+                type="text"
+                name="description"
+                label="Descrição"
+                value={description}
+                onChange={value => setDescription(value)}
+            />
+            <FieldRange
+                type="date"
+                name="date"
+                label="Data"
+                lowValue={dateFrom.format('YYYY-MM-DD')}
+                highValue={dateTo.format('YYYY-MM-DD')}
+                onChange={({kind, value}) => kind === 'LOW' ? setDateFrom(moment(value)):setDateTo(moment(value))}
+            />
 
-            <button onClick={handleSave}>Salvar</button>
+            <Button onClick={handleSave}>Salvar</Button>
         </Container>
     )
 }
@@ -101,10 +124,51 @@ const ProjectForm = () => {
 const Container = styled.article`
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    font-size: 1.5rem;
+    justify-content: flex-start;
+    align-items: center;
+
+    padding: 0 0.5rem;
 
     border: 1px solid black;
+
+    background-color: #FFFFFF;
+`;
+const TitleLine = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: 0.5rem;
+
+    width: 100%;
+    height: 3.125rem;
+
+    font-size: 1rem;
+    font-weight: bold;
+`;
+
+const InputLine = styled.div`
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+
+    width: 100%;
+`;
+
+const Button = styled.button`
+    border: 0.1px solid #000000;
+    border-radius: 4px;
+
+    width:  5rem;
+    height: 1.375rem;
+
+    background: #FCFCFC;
+
+    box-sizing: border-box;
+
+    font-weight: bold;
+
+    cursor: pointer;
 `;
 
 export default ProjectForm;
