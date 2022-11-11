@@ -1,18 +1,32 @@
-FROM node:current-alpine
+# stage1 - build react app first 
+FROM node:current-alpine as build
 
-RUN mkdir -p /home/node/app/node_modules
-RUN chown -R node:node /home/node/app
+WORKDIR /app
 
-WORKDIR /home/node/app
+ENV PATH /app/node_modules/.bin:$PATH
 
-COPY ./package.json ./
-
-USER node
+COPY ./package.json /app/
+COPY ./package-lock.json /app/
 
 RUN npm install
 
-COPY --chown=node:node ./ ./
+COPY . /app
+RUN rm /app/src/index.css
+RUN touch /app/src/index.css
 
-EXPOSE 8080
+RUN npm run build
 
-CMD [ "npm", "start" ]
+CMD ["npm", "run", "dev"]
+
+# # stage 2 - build the final image and copy the react build files
+# FROM nginx:stable-alpine
+
+# COPY --from=build /app/build /usr/share/nginx/html
+
+# RUN rm /etc/nginx/conf.d/default.conf
+
+# COPY ./nginx/nginx.conf /etc/nginx/conf.d
+
+# EXPOSE 80
+
+# CMD ["nginx", "-g", "daemon off;"]

@@ -1,38 +1,55 @@
-import React from 'react';
+import moment from 'moment';
 import styled from 'styled-components';
 
-export interface IProjectWorkDays {
-    id:         string;
-    name:       string;
-    color:      string;
-    workday:    number;
-    workhours:  number;
+export interface ITaskWorkDays {
+    id:             string | undefined;
+    description:    string;
+    projectId:      string;
+    name:           string;
+    color:          string;
+    workday:        moment.Moment;
+    workhours:      number;
 }
 
 export interface IDays {
-    dayText:    string;
-    size:       number;
-    disable:    boolean;
-    holiday:    boolean;
-    projects:   IProjectWorkDays[];
-    onClick:    () => void;
+    dayText:        string;
+    size:           number;
+    disable:        boolean;
+    holiday:        boolean;
+    tasks:          ITaskWorkDays[];
+    onDayClick:     () => void;
+    onTaskClick:    (id: string) => void;
 }
 
-const Days = ({ dayText, size, disable, holiday, projects, onClick }: IDays) => {
+const Days = ({ dayText, size, disable, holiday, tasks, onDayClick, onTaskClick }: IDays) => {
+
+    const handleClick = (e: React.MouseEvent, onClick: () => void) => {
+        e.preventDefault();
+
+        onClick();
+    }
+
     return (
         <Container
             size={size}
             disable={disable}
             holiday={holiday}
-            onClick={onClick}
         >
-            <Text>
+            <Text
+                onClick={e => handleClick(e, onDayClick)}
+            >
                 {dayText}
             </Text>
-            {projects &&
-                projects.map(
-                    project => 
-                        <ProjectLine key={project.id} color={project.color} />
+            {tasks &&
+                tasks.map(
+                    task => 
+                        <ProjectLine
+                            key={task.id}
+                            color={task.color}
+                            onClick={() => task.id && onTaskClick(task.id)}
+                        >
+                                <p>{task.name.split(' ')[0].substring(0, 12)}</p>
+                        </ProjectLine>
                 )
             }
         </Container>
@@ -92,6 +109,25 @@ const ProjectLine = styled.div<IProjectLine>`
     box-shadow: 4px 6px 6px 0px rgba(0,0,0,0.75);
     -webkit-box-shadow: 4px 6px 6px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 4px 6px 6px 0px rgba(0,0,0,0.75);
+
+    &:hover {
+        opacity: 100%;
+        
+        min-height: 1.5rem;
+
+        font-weight: bold;
+
+        z-index: 3;
+    }
+
+    &>p {
+        margin: 0;
+        color: ${p => p.color};
+        mix-blend-mode: difference;
+
+        font-size: 0.9rem;
+        text-align: center;
+    }
 `;
 
 const Text = styled.b`
@@ -100,6 +136,8 @@ const Text = styled.b`
     margin: auto;
 
     cursor: pointer;
+
+    z-index: 3;
 `;
 
 export default Days;

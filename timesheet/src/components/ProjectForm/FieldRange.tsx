@@ -1,22 +1,25 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Input } from './Input';
 
 interface IFieldProps {
     type?:      string;
     name:       string;
     label:      string;
-    lowValue:      string;
-    highValue:      string;
+    width?:     number;
+    lowValue:   string;
+    highValue:  string;
     onChange:   (props: { kind: string; value: string }) => void;
+    disabled:   boolean;
 }
 
-export const FieldRange = ({ type, name, label, lowValue, highValue, onChange }: IFieldProps) => {
+export const FieldRange = ({ type, name, label, width, lowValue, highValue, onChange, disabled }: IFieldProps) => {
 
     return (
         <Container>
             <label htmlFor={name}>{label}</label>
             <InputLine>
-                <input
+                <Input
                     type={type === 'date' ? type : 'text'}
                     name={`${name}Low`}
                     value={lowValue}
@@ -24,10 +27,12 @@ export const FieldRange = ({ type, name, label, lowValue, highValue, onChange }:
                     style={
                         {
                             textAlign: (type === 'number' ? 'right':'left'),
+                            width: `${width}rem`
                         }
                     }
+                    disabled={disabled}
                 />
-                <input
+                <Input
                     type={type ? type : 'text'}
                     name={`${name}High`}
                     value={highValue}
@@ -35,20 +40,28 @@ export const FieldRange = ({ type, name, label, lowValue, highValue, onChange }:
                     style={
                         {
                             textAlign: (type === 'number' ? 'right':'left'),
+                            width: `${width}rem`
                         }
                     }
+                    disabled={disabled}
                 />
             </InputLine>
         </Container>
     )
 }
 
-const Container = styled.div`
+interface IContainerProps {
+    width?: number;
+}
+
+const Container = styled.div<IContainerProps>`
     display: flex;
     flex-direction: column;
 
+    gap: 0.4rem;
+
     padding-bottom: 1rem;
-    width: 100%;
+    width: ${p => p.width ? `${p.width}rem`:`100%`};
 
     &>label {
         padding: 0 8px;
@@ -62,16 +75,4 @@ const InputLine = styled.div`
     display: flex;
     justify-content: space-between;
     gap: 1rem;
-
-    &>input {
-        border: 0.3px solid black;
-        border-radius: 6px;
-        padding: 0 8px;
-
-        height: 22px;
-        font-size: 0.9rem;
-        
-        box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
-        box-sizing: border-box;
-    }
 `;

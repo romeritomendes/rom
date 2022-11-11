@@ -1,12 +1,11 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import TimeSheet from "./components/TimeSheet";
+import TimeSheet from "./components/TimeSheet"
 
-import "./index.css";
+function App() {
+    return (
+        <div>
+            <TimeSheet />
+        </div>
+    )
+}
 
-const App = () => (
-  <div>
-    <TimeSheet />
-  </div>
-);
-ReactDOM.render(<TimeSheet />, document.getElementById("app"));
+export default App

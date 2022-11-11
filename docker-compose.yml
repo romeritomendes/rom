@@ -8,49 +8,48 @@ services:
     image: "${COMPOSE_PROJECT_NAME}-main"
     container_name: "${COMPOSE_PROJECT_NAME}-main"
     restart: unless-stopped
-    depends_on:
-      - frontend-head
-      - frontend-timesheet
     ports:
-      - "5100:5100"
-    volumes:
-      - ./main:/home/node/app
-      - node_modules_frontend_main:/home/node/app/node_modules
+      - "5100:80"
+    # volumes:
+    #   - ./main:/home/node/app
+    #   - node_modules_frontend_main:/home/node/app/node_modules
     networks:
       - frontend_network
-    command: npm start
+    # command: npm start
 
-  frontend-head:
-    build:
-      context: ./head
-      dockerfile: Dockerfile
-    image: "${COMPOSE_PROJECT_NAME}-head"
-    container_name: "${COMPOSE_PROJECT_NAME}-head"
-    restart: unless-stopped
-    ports:
-      - "5101:5101"
-    volumes:
-      - ./head:/home/node/app
-      - node_modules_frontend_head:/home/node/app/node_modules
-    networks:
-      - frontend_network
-    command: npm start
+  # frontend-head:
+  #   build:
+  #     context: ./head
+  #     dockerfile: Dockerfile
+  #   image: "${COMPOSE_PROJECT_NAME}-head"
+  #   container_name: "${COMPOSE_PROJECT_NAME}-head"
+  #   restart: unless-stopped
+  #   ports:
+  #     - "5101:5101"
+  #   volumes:
+  #     - ./head:/home/node/app
+  #     - node_modules_frontend_head:/home/node/app/node_modules
+  #   networks:
+  #     - frontend_network
+  #   command: npm start
 
-  frontend-timesheet:
-    build:
-      context: ./timesheet
-      dockerfile: Dockerfile
-    image: "${COMPOSE_PROJECT_NAME}-timesheet"
-    container_name: "${COMPOSE_PROJECT_NAME}-timesheet"
-    restart: unless-stopped
-    ports:
-      - "5102:5102"
-    volumes:
-      - ./timesheet:/home/node/app
-      - node_modules_frontend_timesheet:/home/node/app/node_modules
-    networks:
-      - frontend_network
-    command: npm start
+  # frontend-timesheet:
+  #   build:
+  #     context: ./timesheet
+  #     dockerfile: Dockerfile
+  #   image: "${COMPOSE_PROJECT_NAME}-timesheet"
+  #   container_name: "${COMPOSE_PROJECT_NAME}-timesheet"
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - frontend-main
+  #   ports:
+  #     - "4173:80"
+  #   # volumes:
+  #   #   - ./timesheet:/home/node/app
+  #   #   - node_modules_frontend_timesheet:/home/node/app/node_modules
+  #   networks:
+  #     - frontend_network
+  #   # command: npm start
 
   frontend-project:
     build:
@@ -60,13 +59,14 @@ services:
     container_name: "${COMPOSE_PROJECT_NAME}-project"
     restart: unless-stopped
     ports:
-      - "5103:5103"
-    volumes:
-      - ./project:/home/node/app
-      - node_modules_frontend_project:/home/node/app/node_modules
+      - "4174:80"
+      # - "5173:5173" # DEV TESTE
+    # volumes:
+    #   - ./project:/home/node/app
+    #   - node_modules_frontend_project:/home/node/app/node_modules
     networks:
       - frontend_network
-    command: npm start
+    # command: npm start
 
 networks:
   frontend_network:
@@ -77,8 +77,8 @@ networks:
           gateway: 10.5.0.1
           
 
-volumes:
-  node_modules_frontend_main:
-  node_modules_frontend_head:
-  node_modules_frontend_timesheet:
-  node_modules_frontend_project:
+# volumes:
+  # node_modules_frontend_main:
+  # node_modules_frontend_head:
+  # node_modules_frontend_timesheet:
+  # node_modules_frontend_project:

@@ -14,7 +14,7 @@ const Calendar = ({  }: ICalendar) => {
     const {
         year,
         month,
-        projectsWorkDays
+        tasksWorkDays
     } = useGlobalContextState();
 
     const weeknumbers: number[] = getWeeksOfMonth({ year, month });
@@ -33,7 +33,7 @@ const Calendar = ({  }: ICalendar) => {
             <Weeks>
                 {weeknumbers &&
                     weeknumbers.map(
-                        weeknumber => <Week key={weeknumber} month={month} weekNumber={weeknumber} projects={projectsWorkDays} />
+                        weeknumber => <Week key={weeknumber} month={month} weekNumber={weeknumber} tasks={tasksWorkDays} />
                     )
                 }
             </Weeks>

@@ -2,13 +2,16 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import ToolBar from "romHead/ToolBar";
-import TimeSheet from "romTimeSheet/TimeSheet";
+import ToolBar from './components/ToolBar';
+import { lazy, Suspense } from 'react'; 
 
-import "./index.css";
+const TimeSheet = lazy(() => import('rom/TimeSheet'));
+const Projects = lazy(() => import('rom-project/Project'));
+
 
 const Main = () => <div>Main</div>;
 const Statement = () => <div>Statement</div>;
+const FallBack = () => <div>Carregando...</div>;
 
 const App = () => {
     return (
@@ -17,10 +20,12 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<Main />} />
                 <Route path="/statement" element={<Statement />}/>
+                <Route path="/projects" element={<Suspense fallback={<FallBack/>}><Projects /></Suspense>}/>
 
-                <Route path="/timesheet" element={<TimeSheet />}/>
+                <Route path="/timesheet" element={<Suspense fallback={<FallBack/>}><TimeSheet /></Suspense>}/>
             </Routes>
         </Router>
       )
 };
-ReactDOM.render(<App />, document.getElementById("app"));
+
+export default App;

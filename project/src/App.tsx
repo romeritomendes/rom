@@ -1,14 +1,13 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import * as React from 'react';
+import { Project } from './components/Project';
 
-import "./index.css";
+function App() {
 
-const App = () => (
-  <div className="container">
-    <div>Name: project</div>
-    <div>Framework: react</div>
-    <div>Language: TypeScript</div>
-    <div>CSS: Empty CSS</div>
-  </div>
-);
-ReactDOM.render(<App />, document.getElementById("app"));
+    return (
+        <div className="App">
+            <Project />
+        </div>
+    )
+}
+
+export default App

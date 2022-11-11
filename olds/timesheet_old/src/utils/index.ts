@@ -1,0 +1,1 @@
+export { getWeeksOfMonth } from './getWeeksOfMonth';

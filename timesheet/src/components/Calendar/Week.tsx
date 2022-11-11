@@ -1,29 +1,30 @@
-import React from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
-import Days, { IProjectWorkDays } from './Days';
+import Days, { ITaskWorkDays } from './Days';
 import { useGlobalContextState } from '../../context';
 
 export interface IWeek {
     month:      number;
     weekNumber: number;
-    projects:   IProjectWorkDays[];
+    tasks:      ITaskWorkDays[];
 }
 
 interface Idays {
     id:         string;
+    mday:       moment.Moment,
     dayText:    string;
     day:        number;
     month:      number;
     week:       number;
     weekDay:    number;
-    projects:   IProjectWorkDays[];
+    tasks:      ITaskWorkDays[];
 }
 
-const Week = ({ weekNumber, month, projects }: IWeek) => {
+const Week = ({ weekNumber, month, tasks }: IWeek) => {
 
     const {
-        setDay,
+        newTask,
+        setSelectedTaskId,
     } = useGlobalContextState();
 
     const mday = moment().day("Sunday").week(weekNumber);
@@ -36,12 +37,13 @@ const Week = ({ weekNumber, month, projects }: IWeek) => {
 
         days.push({
             id:         `${weekNumber}_${mday.format('DD')}`,
+            mday:       moment(mday),
             dayText:    mday.format('DD'),
             day:        lday,
             month:      lmonth,
             week:       weekNumber,
             weekDay:    mday.weekday(),
-            projects:   lmonth === month ? projects.filter(project => project.workday === lday):[],
+            tasks:      lmonth === month ? tasks.filter(task => parseInt(task.workday.format('DD')) === lday):[],
         })
 
         mday.add(1, 'd');
@@ -59,8 +61,10 @@ const Week = ({ weekNumber, month, projects }: IWeek) => {
                             size={6}
                             disable={day.month !== month}
                             holiday={day.weekDay === 0 || day.weekDay === 6}
-                            projects={day.projects}
-                            onClick={() => setDay(day.day)}
+                            tasks={day.tasks}
+
+                            onDayClick={() => newTask(day.mday)}
+                            onTaskClick={setSelectedTaskId}
                         />
                 )
             }

@@ -1,12 +1,22 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import moment from 'moment';
 import { createContext, useState, useContext, PropsWithChildren } from 'react';
-import { IProjectWorkDays } from '../components/Calendar/Days';
-import { addProjectWorkDays, getProjectWorkDays } from '../utils/projectApi';
-import { IaddProjectWorkDays } from '../utils/projectApi/addProjectWorkDays';
+import { ITaskWorkDays } from '../components/Calendar/Days';
+import { addTaskWorkDays, getTaskWorkDays } from '../utils/projectApi';
+import { IaddTaskWorkDays } from '../utils/projectApi/addTaskWorkDays';
 
 interface IProvider {
 
+}
+
+const NEW_TASK: ITaskWorkDays = {
+    id:             undefined,
+    description:    '',
+    projectId:      '',
+    name:           '',
+    color:          '',
+    workday:        moment(),
+    workhours:      8,
 }
 
 interface IGlobalContext {
@@ -14,12 +24,17 @@ interface IGlobalContext {
     setYear:            (year: string) => void;
     month:              number;
     setMonth:           (month: string) => void;
-    selectedDay:        moment.Moment;
-    setDay:             (day: number) => void,
-    projectsWorkDays:   IProjectWorkDays[];
+    newTask:            (day: moment.Moment) => void;
+    // selectedTaskId:     string | undefined;
+    selectedTask:       ITaskWorkDays;
+    setSelectedTaskId:  (id: string | undefined) => void;
+    tasksWorkDays:      ITaskWorkDays[];
     back:               () => void;
     forward:            () => void;
-    addProjectWorkDays: (props: IaddProjectWorkDays) => void;
+    addTaskWorkDays:    (props: IaddTaskWorkDays) => void;
+    dialogShow:         boolean;
+    openDialog:         () => void;
+    closeDialog:        () => void;
 }
 
 const Context = createContext<IGlobalContext>({
@@ -27,12 +42,16 @@ const Context = createContext<IGlobalContext>({
     setYear:            () => {},
     month:              0,
     setMonth:           () => {},
-    selectedDay:        moment(),
-    setDay:             () => {},
-    projectsWorkDays:   [],
+    newTask:            () => {},
+    selectedTask:       NEW_TASK,
+    setSelectedTaskId:  () => {},
+    tasksWorkDays:      [],
     back:               () => {},
     forward:            () => {},
-    addProjectWorkDays: () => {},
+    addTaskWorkDays:    () => {},
+    dialogShow:         false,
+    openDialog:         () => {},
+    closeDialog:        () => {},
 });
 
 const DEFAULT_YEAR = Number.parseInt(moment().format('YYYY'));
@@ -42,11 +61,14 @@ export const Provider = ({ children }: PropsWithChildren<IProvider>) => {
 
     const [year, setYear] = useState<number>(DEFAULT_YEAR);
     const [month, setMonth] = useState<number>(DEFAULT_MONTH);
-    const [projects, setProjects] = useState<IProjectWorkDays[]>([]);
-    const [day, setDay] = useState<number>(parseInt(moment().format('DD')));
+    const [tasks, setTasks] = useState<ITaskWorkDays[]>([]);
+    const [selectedTaskId, setSelectedTaskId] = useState<string | undefined>(undefined);
+    const [dialogShow, setDialogShow] = useState(false);
 
     useEffect(() => {
-        setProjects(getProjectWorkDays({ month }));
+        getTaskWorkDays({ year, month }).then(
+            (resTasks: ITaskWorkDays[])=> setTasks(resTasks)
+        )
     }, [year, month]);
 
     const handleBackMonth = () => {
@@ -65,21 +87,48 @@ export const Provider = ({ children }: PropsWithChildren<IProvider>) => {
         );
     }
 
+    const handleSelectedTaskId = (id: string | undefined) => {
+        
+        setSelectedTaskId(id);
+
+        if(id)
+            setDialogShow(true);
+    }
+
+    let taskEdit = tasks.filter(task => task.id === selectedTaskId)[0];
+
+    const handleNewTask = (mday: moment.Moment) => {
+        setSelectedTaskId(undefined);
+        // taskEdit = NEW_TASK;
+        NEW_TASK.workday = moment(mday);
+        setDialogShow(true);
+    }
+
     return (
         <Context.Provider value={{
             year,
             setYear:            year => setYear(Number.parseInt(year)),
             month,
             setMonth:           month => setMonth(Number.parseInt(month)),
-            selectedDay:        moment(`${year}-${month}-${day}`),
-            setDay:             setDay,
-            projectsWorkDays:   projects,
+            newTask:            handleNewTask,
+            selectedTask:       selectedTaskId ? taskEdit : NEW_TASK,
+            setSelectedTaskId:  handleSelectedTaskId,
+            tasksWorkDays:      tasks,
             back:               handleBackMonth,
             forward:            handleForwardMonth,
-            addProjectWorkDays: props => {
-                addProjectWorkDays(props);
-                setProjects(getProjectWorkDays({ month }));
-            }
+            addTaskWorkDays: props => {
+                addTaskWorkDays(props)
+                .finally(() => {
+                    getTaskWorkDays({ year, month }).then(
+                        (resTasks: ITaskWorkDays[]) => setTasks(resTasks)
+                    );
+                    setDialogShow(false);
+                });
+                
+            },
+            dialogShow,
+            openDialog:         () => setDialogShow(true),
+            closeDialog:        () => setDialogShow(false),
         }}>
             {children}
         </Context.Provider>
