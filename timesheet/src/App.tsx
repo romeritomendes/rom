@@ -1,11 +1,7 @@
 import TimeSheet from "./components/TimeSheet"
 
 function App() {
-    return (
-        <div>
-            <TimeSheet />
-        </div>
-    )
+    return <TimeSheet />
 }
 
 export default App

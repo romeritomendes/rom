@@ -33,23 +33,23 @@ services:
   #     - frontend_network
   #   command: npm start
 
-  # frontend-timesheet:
-  #   build:
-  #     context: ./timesheet
-  #     dockerfile: Dockerfile
-  #   image: "${COMPOSE_PROJECT_NAME}-timesheet"
-  #   container_name: "${COMPOSE_PROJECT_NAME}-timesheet"
-  #   restart: unless-stopped
-  #   depends_on:
-  #     - frontend-main
-  #   ports:
-  #     - "4173:80"
-  #   # volumes:
-  #   #   - ./timesheet:/home/node/app
-  #   #   - node_modules_frontend_timesheet:/home/node/app/node_modules
-  #   networks:
-  #     - frontend_network
-  #   # command: npm start
+  frontend-timesheet:
+    build:
+      context: ./timesheet
+      dockerfile: Dockerfile
+    image: "${COMPOSE_PROJECT_NAME}-timesheet"
+    container_name: "${COMPOSE_PROJECT_NAME}-timesheet"
+    restart: unless-stopped
+    depends_on:
+      - frontend-main
+    ports:
+      - "4173:80"
+    # volumes:
+    #   - ./timesheet:/home/node/app
+    #   - node_modules_frontend_timesheet:/home/node/app/node_modules
+    networks:
+      - frontend_network
+    # command: npm start
 
   frontend-project:
     build:

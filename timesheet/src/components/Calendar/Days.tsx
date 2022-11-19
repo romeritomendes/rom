@@ -7,8 +7,10 @@ export interface ITaskWorkDays {
     projectId:      string;
     name:           string;
     color:          string;
+    rateValueHour:  number;
     workday:        moment.Moment;
     workhours:      number;
+    preview:        boolean;
 }
 
 export interface IDays {
@@ -48,7 +50,7 @@ const Days = ({ dayText, size, disable, holiday, tasks, onDayClick, onTaskClick 
                             color={task.color}
                             onClick={() => task.id && onTaskClick(task.id)}
                         >
-                                <p>{task.name.split(' ')[0].substring(0, 12)}</p>
+                            <p>{task.name.split(' ')[0].substring(0, 12)}</p>
                         </ProjectLine>
                 )
             }

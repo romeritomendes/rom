@@ -1,9 +1,9 @@
-import { InputHTMLAttributes } from 'react';
-import styled from 'styled-components';
+import { InputHTMLAttributes } from "react";
+import styled from "styled-components";
 
-interface IInputProps extends InputHTMLAttributes<HTMLInputElement>{}
+interface ICheckBoxProps extends InputHTMLAttributes<HTMLInputElement>{}
 
-export const Input = (props: IInputProps) => {
+export const CheckBox = (props: ICheckBoxProps) => {
     return (
         <Container {...props} />
     )

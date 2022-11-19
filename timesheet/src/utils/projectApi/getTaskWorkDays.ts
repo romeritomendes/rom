@@ -4,12 +4,15 @@ import { ITaskWorkDays } from "../../components/Calendar/Days";
 import { BASE_URL } from "../../hooks/api";
 
 interface IgetTaskWorkDays {
-    year:   number;
-    month:  number;
+    year:           number;
+    month?:         number;
+    weekNumber?:    number;
 }
 
-export const getTaskWorkDays = async ({ year, month }: IgetTaskWorkDays) => new Promise<ITaskWorkDays[]>((resolve, reject) => {
-    const uri = `${BASE_URL}timesheet/month/${year}/${month}`;
+export const getTaskWorkDays = async ({ year, month, weekNumber }: IgetTaskWorkDays) => new Promise<ITaskWorkDays[]>((resolve, reject) => {
+    const uri = weekNumber
+        ? `${BASE_URL}timesheet/week/${year}/${weekNumber}`
+        : `${BASE_URL}timesheet/month/${year}/${month}`;
     
     axios.get(uri)
     .then(res => {
@@ -19,10 +22,12 @@ export const getTaskWorkDays = async ({ year, month }: IgetTaskWorkDays) => new 
                     id:             row._id,
                     description:    row.description,
                     projectId:      row.project?._id,
-                    name:           row.project?.shortname,
+                    name:           row.project?.name,
+                    rateValueHour:  row.project?.rateValueHour,
                     color:          row.project?.color ? `#${row.project?.color}` : `#${Math.floor(Math.random()*16777215).toString(16)}`,
                     workday:        moment(row.workday),
-                    workhours:      row.hours
+                    workhours:      row.hours,
+                    preview:        row.preview,
                 }
             )
         );

@@ -15,6 +15,10 @@
   -webkit-text-size-adjust: 100%;
 }
 
+#root {
+  width: 100%;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -28,7 +32,9 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
-  min-width: 320px;
+  /* min-width: 320px;
+  min-height: 100vh; */
+  min-width: 100ch;
   min-height: 100vh;
 }
 

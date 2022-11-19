@@ -1,28 +1,31 @@
-import React from 'react';
 import styled from 'styled-components';
 import { useGlobalContextState } from '../../context';
 import { months } from '../../data/months';
 
 export interface IMonthTitleProps {
-    title: string;
-    back: () => void;
-    forward: () => void;
+
 }
 
-export const MonthTitle = () => {
+export const MonthTitle = (props: IMonthTitleProps) => {
 
     const {
         year,
         month,
+        type,
+        weekNumber,
         back,
         forward,
     } = useGlobalContextState();
     
     return (
         <Container>
-            <button onClick={back}>&lt;&lt;</button>
-            <h3>{`${months[month-1].title} - ${year}`}</h3>
-            <button onClick={forward}>&gt;&gt;</button>
+            <button onClick={() => back()}>&lt;&lt;</button>
+            {
+                type === 'TS'
+                    ? <h3>{`Semana ${weekNumber} - ${year}`}</h3>
+                    : <h3>{`${months[month-1].title} - ${year}`}</h3>
+            }
+            <button onClick={() => forward()}>&gt;&gt;</button>
         </Container>
     )
 }

@@ -1,13 +1,17 @@
 import styled from "styled-components";
 
-export const Container = styled.article`
+export const Container = styled.div`
     display: flex;
     flex-direction: column;
-    align-items: center;
+
+    /* overflow: auto; */
+    /* width: 300px; */
+
+    width:  max-content;
 `;
 
 export const Head = styled.div`
-    display: flex;
+    display: inline-block;
 
     background-color: #3441AD;
     color: #FFFFFF;
@@ -15,17 +19,21 @@ export const Head = styled.div`
 `;
 
 export const Body = styled.div`
-    display: flex;
-    flex-direction: column;
-
-    width: 100%;
+    display: inline-block;
 `;
 
-export const Row = styled.div`
-    display: flex;
-    `;
+interface IRow {
+    color?:     string;
+}
 
-    interface ICell {
+export const Row = styled.div<IRow>`
+    display: flex;
+
+    background-color: #${p => p.color};
+    color: ${p => p.color ? '#ffffff':''};
+`;
+
+interface ICell {
     size?:  number;
     align?: string;
 }
@@ -38,8 +46,7 @@ export const Cell = styled.div<ICell>`
     border: 1px solid #EAEAEA;
     padding: 0 0.5rem;
 
-    width: ${p => p.size}rem;
-    min-width: 0.5rem;
+    min-width: ${p => p.size}rem;
     height: 2rem;
 
     font-size: 0.8rem;

@@ -1,103 +1,118 @@
+import axios from 'axios';
 import moment from 'moment';
+import { useEffect, useState } from 'react';
 import { useGlobalContextState } from '../../context';
-import { getWeeksOfMonth } from '../../utils';
-import { IDays } from '../Calendar/Days';
-import { Body, Cell, Container, Head, Row } from './Layout';
+import { IProject } from '../../enities/project';
+import { BASE_URL } from '../../hooks/api';
+import { Field } from '../ProjectForm/Field';
+import { MonthTab, ITimeSheetTab } from './MonthTab';
+import { SummaryTab } from './SummaryTab';
 
-interface ITimeSheetTab {
-    id:         string;
-    dayText:    string;
-}
+
 
 interface ITimeSheetTabProps {
-    handleDel:  (id: string) => void;
-    handleEdit: (id: string) => void;
+
 }
 
-export const TimeSheetTab = ({ handleDel, handleEdit }: ITimeSheetTabProps) => {
+interface IhandleClick {
+    id?:        string;
+    projectId?: string;
+    workday:    moment.Moment;
+}
 
-    const projectLength = 12;
-    const clientPagLength = 6;
-    const actionLength = 7;
+export const TimeSheetTab = (props: ITimeSheetTabProps) => {
 
     const {
         year,
         month,
-        tasksWorkDays
+        type,
+        weekNumber,
+        tasksWorkDays,
+        setSelectedTaskId,
+        newTask
     } = useGlobalContextState();
 
-    const mday = moment(`${year}-${month}-01`);
-    const lastDay = moment(mday).endOf("month");
+    const [showPreview, setShowPreview] = useState(false);
+    const [projects, setProjects] = useState<IProject[]>([]);
+
+    const mday = type === 'TS' ? moment().day("Sunday").week(weekNumber) : moment(`${year}-${month}-01`);
+    const lastDay = type === 'TS' ? moment().day("Saturday").week(weekNumber) : moment(mday).endOf("month");
 
     const days: ITimeSheetTab[] = [];
-    for (let idx = 1; idx <= parseInt(lastDay.format('DD')); idx++) {
-
-        // const lday = parseInt(mday.format('DD'));
-        // const lmonth = parseInt(mday.format("MM"));
+    const qntdDays = lastDay.diff(mday, "d");
+    for (let idx = 0; idx <= qntdDays; idx++) {
 
         days.push({
             id:         mday.format('DD'),
             dayText:    mday.format('DD'),
-            // month:      lmonth,
-            // week:       mday.week,
-            // weekDay:    mday.weekday(),
-            // tasks:      [],
+            weekDay:    mday.weekday(),
+            workday:    moment(mday),
         })
 
         mday.add(1, 'd');
-
     }
 
-    const projects = [...new Map(tasksWorkDays.map(m => [m.name, m])).values()]
+    // const projects = [...new Map(tasksWorkDays.map(m => [m.name, m])).values()].map(
+    //     project => ({
+    //         projectId:      project.projectId,
+    //         name:           project.name,
+    //         color:          project.color,
+    //         rateValueHour:  project.rateValueHour
+    //     })
+    // );
+    
+    useEffect(() => {
+        const uri = `${BASE_URL}project`;
 
-    return (
-        <Container>
-            <Head>
-                <Cell size={projectLength}>Projeto</Cell>
-                <Cell size={clientPagLength}>Cliente Rec.</Cell>
-                {days &&
-                    days.map(
-                        day => <Cell key={day.dayText} size={1} align="center">{day.dayText}</Cell>
-                    )
-                }
-                <Cell size={3}>Total</Cell>
-            </Head>
-            <Body>
-                {
-                    projects?.map(
-                        project => {
-                            const tasks = tasksWorkDays.filter(task => task.name === project.name);
-
-                            let total = 0;
-
-                            return(
-                                <Row key={project.name}>
-                                    <Cell size={projectLength}>{project.name.substring(0, 30)}</Cell>
-                                    <Cell size={clientPagLength}>{project.name.split(" ")[0].substring(0, 10)}</Cell>
-                                    {
-                                        days?.map(
-                                            day => {
-                                                const task = tasks.filter(task => task.workday.format('DD') === day.id)[0];
-                                                
-                                                total += task ? task.workhours:0;
-                                                return (
-                                                    <Cell
-                                                        key={day.dayText}
-                                                        size={1}
-                                                        align="center"    
-                                                    >{task ? task.workhours:'0'}
-                                                    </Cell>
-                                                )
-                                            }
-                                        )
-                                    }
-                                    <Cell size={3} align="space-around">{total}</Cell>
-                                </Row>
-                            )
+        axios.get(uri)
+        .then(res => {
+            setProjects(
+                projects => res.data.rows.map(
+                    (row: any) => (
+                        {
+                            projectId:      row._id,
+                            name:           row.name,
+                            color:          row.color,
+                            rateValueHour:  row.rateValueHour
                         }
                     )
-                }
-            </Body>
-        </Container>
+                )
+            )
+            
+        });
+    }, [])
+
+    projects.sort((a, b) => a.name.localeCompare(b.name));
+
+    const handleClick = ({ id, workday, projectId }: IhandleClick) => {
+        if(id)
+            setSelectedTaskId(id);
+        else
+            newTask({ workday, projectId });
+    }
+
+    return (
+        <>
+        
+            <Field
+                name="preview"
+                type="checkbox"
+                value={showPreview ? 'X':''}
+                onChange={v => setShowPreview(v === 'X')}
+            />
+
+            <MonthTab
+                    days={days}
+                    projects={projects}
+                    tasksWorkDays={tasksWorkDays}
+                    onDayClick={handleClick}
+                    preview={showPreview}
+                />
+            <SummaryTab
+                projects={projects}
+                tasksWorkDays={tasksWorkDays}
+                preview={showPreview}
+            />
+        </>
     )
 }

@@ -21,9 +21,10 @@ interface IWrapperProps {
     selectedDay:        moment.Moment;
     closeDialog:        () => void;
     onSave:             (props: onSave) => void;
+    onDel:              (id: string) => void;
 }
 
-export const Wrapper = ({ task, selectedDay, closeDialog, onSave }: IWrapperProps) => {
+export const Wrapper = ({ task, selectedDay, closeDialog, onSave, onDel }: IWrapperProps) => {
     
 
     const [projectId, setProjectId] = useState(task.projectId);
@@ -31,6 +32,7 @@ export const Wrapper = ({ task, selectedDay, closeDialog, onSave }: IWrapperProp
     const [hours, setHours] = useState<number>(task.workhours);
     const [dateFrom, setDateFrom] = useState(selectedDay);
     const [dateTo, setDateTo] = useState(selectedDay);
+    const [preview, setPreview] = useState(task.preview);
 
     const { data: projects, getAPI } = useApi<IProject[]>({ endpoint: 'project' });
 
@@ -62,7 +64,8 @@ export const Wrapper = ({ task, selectedDay, closeDialog, onSave }: IWrapperProp
                         workday:        parseInt(baseDate.format('DD')),
                         date:           baseDate.toDate(),
                         description:    description,
-                        workhours:      hours
+                        workhours:      hours,
+                        preview:        preview,
                     }
                 )
             }
@@ -73,18 +76,18 @@ export const Wrapper = ({ task, selectedDay, closeDialog, onSave }: IWrapperProp
         onSave({ projectId, newHours });
     }
 
-    const handleDel = () => {
-        const uri = `${BASE_URL}timesheet/${task.id}`;
-        axios.delete(uri)
-            .then(() => {
-                alert("Apontamento eliminado!");
-                closeDialog();
-            })
-            .catch(err => {
-                console.log(err);
-                alert("Erro ao eliminar apontamneto!");
-            });
-    }
+    // const handleDel = () => {
+    //     const uri = `${BASE_URL}timesheet/${task.id}`;
+    //     axios.delete(uri)
+    //         .then(() => {
+    //             alert("Apontamento eliminado!");
+    //             closeDialog();
+    //         })
+    //         .catch(err => {
+    //             console.log(err);
+    //             alert("Erro ao eliminar apontamneto!");
+    //         });
+    // }
 
     return (
         <Container>
@@ -100,12 +103,15 @@ export const Wrapper = ({ task, selectedDay, closeDialog, onSave }: IWrapperProp
                     onChange={value => setProjectId(value)}
                 />
                 <Field
-                    type="number"
+                    type="hour"
                     name="hours"
                     label="Tempo (H)"
                     width={7}
-                    value={hours.toString()}
-                    onChange={value => setHours(parseInt(value))}
+                    value={hours.toFixed(1)}
+                    onChange={value => {
+                        console.log(value)
+                        setHours(parseFloat(value))
+                    }}
                 />
             </InputLine>
             <Field
@@ -123,13 +129,20 @@ export const Wrapper = ({ task, selectedDay, closeDialog, onSave }: IWrapperProp
                 lowValue={dateFrom.format('YYYY-MM-DD')}
                 highValue={dateTo.format('YYYY-MM-DD')}
                 disabled={task.id?true:false}
-                onChange={({kind, value}) => kind === 'LOW' ? setDateTo(moment(value)):setDateFrom(moment(value))}
+                onChange={({kind, value}) => kind === 'LOW' ? setDateFrom(moment(value)):setDateTo(moment(value))}
+            />
+            <Field
+                type="checkbox"
+                name="preview"
+                label="Preview"
+                value={preview ? 'X':''}
+                onChange={value => {setPreview(value === 'X')}}
             />
 
             <div>
                 <Button onClick={closeDialog}>Cancelar</Button>
                 {
-                    task.id && <Button onClick={handleDel}>Apagar</Button>
+                    task.id && <Button onClick={() => task.id && onDel(task.id)}>Apagar</Button>
                 }
                 <Button onClick={handleSave}>Salvar</Button>
             </div>

@@ -31,6 +31,7 @@ a:hover {
 body {
   margin: 0;
   display: flex;
+  min-width: 100ch;
   min-height: 100vh;
 }
 

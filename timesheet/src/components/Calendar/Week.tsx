@@ -63,7 +63,7 @@ const Week = ({ weekNumber, month, tasks }: IWeek) => {
                             holiday={day.weekDay === 0 || day.weekDay === 6}
                             tasks={day.tasks}
 
-                            onDayClick={() => newTask(day.mday)}
+                            onDayClick={() => newTask({ workday: day.mday })}
                             onTaskClick={setSelectedTaskId}
                         />
                 )

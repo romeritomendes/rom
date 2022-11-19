@@ -7,6 +7,7 @@ export interface IHoursInMonth {
     date:           Date;
     description:    string;
     workhours:      number;
+    preview:        boolean;
 }
 
 export interface IWorkdays {
@@ -38,6 +39,7 @@ const addTask = async ({ projectId, workdays }: IaddTaskWorkDays) => {
                             description:    row.description,
                             workday:        row.date,
                             hours:          row.workhours,
+                            preview:        row.preview,
                         }
                     )
                 } else {
@@ -47,6 +49,7 @@ const addTask = async ({ projectId, workdays }: IaddTaskWorkDays) => {
                             description:    row.description,
                             workday:        row.date,
                             hours:          row.workhours,
+                            preview:        row.preview,
                         }
                     )
                 }
@@ -104,6 +107,21 @@ export const addTaskWorkDays = ({ projectId, workdays }: IaddTaskWorkDays) => ne
         //     return;
     
     addTask({ projectId, workdays })
-    .catch(err => console.log(err))
-    .finally(() => resolve());
+        .catch(err => console.log(err))
+        .finally(() => resolve());
 })
+
+
+
+export const handleDel = (id: string) => new Promise<void>((resolve, reject) => {
+    const uri = `${BASE_URL}timesheet/${id}`;
+    axios.delete(uri)
+        .then(() => {
+            alert("Apontamento eliminado!");
+        })
+        .catch(err => {
+            console.log(err);
+            alert("Erro ao eliminar apontamneto!");
+        })
+        .finally(() => resolve());
+});
