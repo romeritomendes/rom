@@ -1,7 +1,5 @@
-import { useState } from "react";
 import { IProject } from "../../enities/project";
 import { ITaskWorkDays } from "../Calendar/Days";
-import { Field } from "../ProjectForm/Field";
 import { Body, Cell, Container, Head, Row } from "./Layout";
 
 export interface ITimeSheetTab {
@@ -10,12 +8,6 @@ export interface ITimeSheetTab {
     weekDay:    number;
     workday:    moment.Moment;
 }
-
-// export interface IProjectTab {
-//     projectId:  string;
-//     name:       string;
-//     color:      string;
-// }
 
 interface IOnDayClickProps {
     id?:        string;
@@ -33,7 +25,6 @@ interface IMonthTabProps {
 
 const projectLength = 12;
 const clientPagLength = 6;
-const actionLength = 3;
 
 export const MonthTab = ({ days, projects, tasksWorkDays, onDayClick, preview }: IMonthTabProps) => {
 

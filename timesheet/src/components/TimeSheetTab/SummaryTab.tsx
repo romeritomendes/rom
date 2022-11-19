@@ -9,19 +9,6 @@ export interface ITimeSheetTab {
     workday:    moment.Moment;
 }
 
-// export interface IProjectTab {
-//     projectId:      string;
-//     name:           string;
-//     color:          string;
-//     rateValueHour:  number;
-// }
-
-// interface IOnDayClickProps {
-//     id?:        string;
-//     projectId?: string;
-//     workday:    moment.Moment;
-// }
-
 interface ISummaryTabProps {
     projects:       IProject[];
     tasksWorkDays:  ITaskWorkDays[];

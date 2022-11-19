@@ -51,15 +51,6 @@ export const TimeSheetTab = (props: ITimeSheetTabProps) => {
 
         mday.add(1, 'd');
     }
-
-    // const projects = [...new Map(tasksWorkDays.map(m => [m.name, m])).values()].map(
-    //     project => ({
-    //         projectId:      project.projectId,
-    //         name:           project.name,
-    //         color:          project.color,
-    //         rateValueHour:  project.rateValueHour
-    //     })
-    // );
     
     useEffect(() => {
         const uri = `${BASE_URL}project`;
@@ -67,7 +58,7 @@ export const TimeSheetTab = (props: ITimeSheetTabProps) => {
         axios.get(uri)
         .then(res => {
             setProjects(
-                projects => res.data.rows.map(
+                () => res.data.rows.map(
                     (row: any) => (
                         {
                             projectId:      row._id,
