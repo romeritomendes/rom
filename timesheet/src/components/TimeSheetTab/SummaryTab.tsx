@@ -54,9 +54,9 @@ export const SummaryTab = ({ projects, tasksWorkDays, preview }: ISummaryTabProp
                             totalAmount = totalAmount + totalAmountProject;
 
                             return(
-                                <Row key={project.name} color={project.color}>
-                                    <Cell size={projectLength}>{project.name.substring(0, 40)}</Cell>
-                                    <Cell size={clientPagLength}>{project.name.split(" ")[0].substring(0, 10)}</Cell>
+                                <Row key={project.projectName} color={project.color}>
+                                    <Cell size={projectLength}>{project.projectName.substring(0, 40)}</Cell>
+                                    <Cell size={clientPagLength}>{project.projectName.split(" ")[0].substring(0, 10)}</Cell>
                                     <Cell
                                         size={HOURSLength}
                                         align="space-around"

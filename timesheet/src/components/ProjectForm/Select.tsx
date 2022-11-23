@@ -25,7 +25,11 @@ export const Select = ({ options, value, onChange }: ISelectProps) => {
 
     return (
         <Container tabIndex={0}>
-            <Value>{selectedOption?.label}</Value>
+            <Value
+                onClick={() => setShow(open => !open)}
+            >
+                {selectedOption?.label}
+            </Value>
             <ClearBtn onClick={() => handleClick("")}>&times;</ClearBtn>
             <Divider/>
             <Caret onClick={() => setShow(open => !open)}/>

@@ -46,14 +46,14 @@ export const MonthTab = ({ days, projects, tasksWorkDays, onDayClick, preview }:
                 {
                     projects?.map(
                         project => {
-                            const tasks = tasksWorkDays.filter(task => task.name === project.name);
+                            const tasks = tasksWorkDays.filter(task => task.projectId === project.projectId);
 
                             let total = 0;
 
                             return(
-                                <Row key={project.name}>
-                                    <Cell size={projectLength}>{project.name.substring(0, 40)}</Cell>
-                                    <Cell size={clientPagLength}>{project.name.split(" ")[0].substring(0, 10)}</Cell>
+                                <Row key={project.projectName}>
+                                    <Cell size={projectLength}>{project.projectName.substring(0, 40)}</Cell>
+                                    <Cell size={clientPagLength}>{project.projectName.split(" ")[0].substring(0, 10)}</Cell>
                                     {
                                         days?.map(
                                             day => {
