@@ -5,4 +5,6 @@ export interface IProject {
     name:           string;
     color:          string;
     rateValueHour:  number;
+    payerId:        string;
+    receptorId:     string;
 }
