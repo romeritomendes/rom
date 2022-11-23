@@ -1,10 +1,11 @@
 import axios from 'axios';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useGlobalContextState } from '../../context';
 import { IProject } from '../../enities/project';
-import { BASE_URL } from '../../hooks/api';
+import { useProjects } from '../../hooks/api/useProjects';
 import { Field } from '../ProjectForm/Field';
+import { ISelectOptions } from '../ProjectForm/Select';
 import { MonthTab, ITimeSheetTab } from './MonthTab';
 import { SummaryTab } from './SummaryTab';
 
@@ -33,7 +34,12 @@ export const TimeSheetTab = (props: ITimeSheetTabProps) => {
     } = useGlobalContextState();
 
     const [showPreview, setShowPreview] = useState(false);
-    const [projects, setProjects] = useState<IProject[]>([]);
+    // const [projects, setProjects] = useState<IProject[]>([]);
+    const [filterType, setFilterType] = useState("");
+    const [filterValue, setFilterValue] = useState("");
+    const [filterOptions, setFilterOptions] = useState<ISelectOptions[]>([]);
+
+    const { projects } = useProjects();
 
     const mday = type === 'TS' ? moment().day("Sunday").week(weekNumber) : moment(`${year}-${month}-01`);
     const lastDay = type === 'TS' ? moment().day("Saturday").week(weekNumber) : moment(mday).endOf("month");
@@ -51,29 +57,36 @@ export const TimeSheetTab = (props: ITimeSheetTabProps) => {
 
         mday.add(1, 'd');
     }
+
+    // useEffect(() => {
+    //     setFilterOptions(
+    //         option => {
+    //             switch (filterType) {
+    //                 case value:
+                        
+    //                     break;
+                
+    //                 default:
+    //                     break;
+    //             }
+    //         }
+    //     )
+    // }, [filterType]);
     
-    useEffect(() => {
-        const uri = `${BASE_URL}project`;
 
-        axios.get(uri)
-        .then(res => {
-            setProjects(
-                () => res.data.rows.map(
-                    (row: any) => (
-                        {
-                            projectId:      row._id,
-                            name:           row.name,
-                            color:          row.color,
-                            rateValueHour:  row.rateValueHour
-                        }
-                    )
-                )
-            )
-            
-        });
-    }, [])
+    const projectOptions: ISelectOptions[] = projects?.map(
+        project => (
+            {
+                label: project.name,
+                value: project.projectId
+            }
+        )
+    );
 
-    projects.sort((a, b) => a.name.localeCompare(b.name));
+    const filteredProjects: IProject[] = projects.filter(
+        project => !filterType || !filterValue || project[filterType] === filterValue
+    );
+    filteredProjects.sort((a, b) => a.name.localeCompare(b.name));
 
     const handleClick = ({ id, workday, projectId }: IhandleClick) => {
         if(id)
@@ -92,15 +105,54 @@ export const TimeSheetTab = (props: ITimeSheetTabProps) => {
                 onChange={v => setShowPreview(v === 'X')}
             />
 
+            <Field
+                type="select"
+                options={[
+                    {
+                        label:  'Sem filtro',
+                        value:  ''
+                    },
+                    {
+                        label:  'Projeto',
+                        value:  'projectId'
+                    },
+                    {
+                        label:  'Cliente Rec.',
+                        value:  'receptorId'
+                    },
+                    {
+                        label:  'Cliente Pag.',
+                        value:  'payerId'
+                    },
+                    {
+                        label:  'Preview',
+                        value:  'preview'
+                    }
+                ]}
+                name="filterType"
+                width={20}
+                value={filterType}
+                onChange={value => setFilterType(value)}
+            />
+
+            <Field
+                type="select"
+                options={projectOptions}
+                name="filterValue"
+                width={20}
+                value={filterValue}
+                onChange={value => setFilterValue(value)}
+            />
+
             <MonthTab
                     days={days}
-                    projects={projects}
+                    projects={filteredProjects}
                     tasksWorkDays={tasksWorkDays}
                     onDayClick={handleClick}
                     preview={showPreview}
                 />
             <SummaryTab
-                projects={projects}
+                projects={filteredProjects}
                 tasksWorkDays={tasksWorkDays}
                 preview={showPreview}
             />
