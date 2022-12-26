@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { BASE_URL } from "../api";
 import { IProject } from "../../enities/project";
+import { ISelectOptions } from "../../components/ProjectForm/Select";
 
 interface IuseProjects {
 
@@ -38,5 +39,14 @@ export const useProjects = (props?: IuseProjects) => {
         fetchProjects();
     }, []);
 
-    return { projects };
+    const projectOptions: ISelectOptions[] = projects?.map(
+        project => (
+            {
+                label: project.projectName,
+                value: project.projectId
+            }
+        )
+    );
+
+    return { projects, projectOptions };
 }

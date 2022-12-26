@@ -21,14 +21,14 @@ export default defineConfig({
         shared: {
           ...deps,
           react: {
-            // eager: true,
-            singleton: true,
+            eager: true,
+            // singleton: true,
             requiredVersion: deps.react
           },
           'react-dom': {
-            // eager: true,
-            singleton: true,
-            // import: false, //Diferente
+            eager: true,
+            // singleton: true,
+            import: false, //Diferente
             requiredVersion: deps['react-dom']
           },
         }

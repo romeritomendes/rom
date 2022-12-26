@@ -1,13 +1,8 @@
-import * as React from 'react';
-import { Project } from './components/Project';
+import Project from './components/Project';
 
 function App() {
 
-    return (
-        <div className="App">
-            <Project />
-        </div>
-    )
+    return <Project />
 }
 
 export default App

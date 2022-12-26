@@ -13,7 +13,7 @@ export default defineConfig({
     plugins: [
       react(),
       federation({
-        name: 'rom',
+        name: 'rom-timesheet',
         filename: 'remoteEntry.js',
         exposes: {
           './TimeSheet': './src/components/TimeSheet/index.tsx',

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
+export const Container = styled.table`
     display: flex;
     flex-direction: column;
 
@@ -10,7 +10,7 @@ export const Container = styled.div`
     width:  max-content;
 `;
 
-export const Head = styled.div`
+export const Head = styled.thead`
     display: inline-block;
 
     background-color: #3441AD;
@@ -18,7 +18,7 @@ export const Head = styled.div`
     font-weight: bold;
 `;
 
-export const Body = styled.div`
+export const Body = styled.tbody`
     display: inline-block;
 `;
 
@@ -26,7 +26,7 @@ interface IRow {
     color?:     string;
 }
 
-export const Row = styled.div<IRow>`
+export const Row = styled.tr<IRow>`
     display: flex;
 
     background-color: #${p => p.color};
@@ -35,13 +35,13 @@ export const Row = styled.div<IRow>`
 
 interface ICell {
     size?:  number;
-    align?: string;
+    justify?: string;
 }
 
-export const Cell = styled.div<ICell>`
+export const Cell = styled.td<ICell>`
     display: flex;
     align-items: center;
-    justify-content: ${p => p.align};
+    justify-content: ${p => p.justify};
 
     border: 1px solid #EAEAEA;
     padding: 0 0.5rem;

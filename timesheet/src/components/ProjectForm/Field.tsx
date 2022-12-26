@@ -5,7 +5,7 @@ import { RadioButton } from './RadioButton';
 import { ISelectOptions, Select } from './Select';
 
 interface IFieldProps {
-    type?:      "select" | "radio" | "checkbox" | "date" | "number" | "amount" | "hour";
+    type?:      "text" | "select" | "radio" | "checkbox" | "date" | "number" | "amount" | "hour";
     options?:   ISelectOptions[];
     name:       string;
     label?:     string;

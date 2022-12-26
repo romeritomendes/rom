@@ -1,15 +1,11 @@
-import axios from 'axios';
 import moment from 'moment';
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import styled from 'styled-components';
-import { IProject } from '../../enities/project';
-import { BASE_URL } from '../../hooks/api';
-import { useApi } from '../../hooks/api/useApi';
+import { useProjects } from '../../hooks/projects/useProjects';
 import { IHoursInMonth } from '../../utils/projectApi/addTaskWorkDays';
 import { ITaskWorkDays } from '../Calendar/Days';
 import { Field } from './Field';
 import { FieldRange } from './FieldRange';
-import { ISelectOptions } from './Select';
 
 export interface onSave {
     projectId:  string;
@@ -33,22 +29,8 @@ export const Wrapper = ({ task, selectedDay, closeDialog, onSave, onDel }: IWrap
     const [dateFrom, setDateFrom] = useState(selectedDay);
     const [dateTo, setDateTo] = useState(selectedDay);
     const [preview, setPreview] = useState(task.preview);
-
-    const { data: projects, getAPI } = useApi<IProject[]>({ endpoint: 'project' });
-
-    useEffect(() => {
-        getAPI();
-    }, []);
     
-    const projectOptions: ISelectOptions[] = [];
-    projects?.forEach(
-        project => projectOptions.push(
-            {
-                label: project.name,
-                value: project._id
-            }
-        )
-    );
+    const { projectOptions } = useProjects();
 
     const handleSave = () => {
         
@@ -75,19 +57,6 @@ export const Wrapper = ({ task, selectedDay, closeDialog, onSave, onDel }: IWrap
 
         onSave({ projectId, newHours });
     }
-
-    // const handleDel = () => {
-    //     const uri = `${BASE_URL}timesheet/${task.id}`;
-    //     axios.delete(uri)
-    //         .then(() => {
-    //             alert("Apontamento eliminado!");
-    //             closeDialog();
-    //         })
-    //         .catch(err => {
-    //             console.log(err);
-    //             alert("Erro ao eliminar apontamneto!");
-    //         });
-    // }
 
     return (
         <Container>

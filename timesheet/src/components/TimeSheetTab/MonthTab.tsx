@@ -60,16 +60,18 @@ export const MonthTab = ({ days, projects, tasksWorkDays, onDayClick, preview }:
                                                 const task = tasks.filter(task => task.workday.format('DD') === day.id)[0];
                                                 const workhours = task && ( !task.preview || preview ) ? task.workhours:0;
 
-                                                const bgHoliday = day.weekDay === 0 || day.weekDay === 6 ? '#dedede':'';
+                                                let backgroundColor = day.weekDay === 0 || day.weekDay === 6 ? '#dedede':'#ffffff';
+
+                                                backgroundColor = backgroundColor === '#ffffff' && workhours === 0? '#fffed5':backgroundColor;
                                                 
                                                 total += workhours;
                                                 return (
                                                     <Cell
                                                         key={day.dayText}
                                                         size={1.2}
-                                                        align="center"
+                                                        justify="center"
                                                         onClick={() => onDayClick({ id: task?.id, workday: day.workday, projectId: project.projectId })}
-                                                        style={{ cursor: 'pointer', backgroundColor: bgHoliday, color: (task?.preview ? 'red':'green') }}
+                                                        style={{ cursor: 'pointer', backgroundColor, color: (task?.preview ? 'red':'green') }}
                                                     >{workhours}
                                                     </Cell>
                                                 )
@@ -78,7 +80,7 @@ export const MonthTab = ({ days, projects, tasksWorkDays, onDayClick, preview }:
                                     }
                                     <Cell
                                         size={3}
-                                        align="space-around"
+                                        justify="space-around"
                                         style={{ backgroundColor: '#dedede' }}
                                     >
                                         {total}

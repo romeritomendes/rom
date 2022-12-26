@@ -59,25 +59,25 @@ export const SummaryTab = ({ projects, tasksWorkDays, preview }: ISummaryTabProp
                                     <Cell size={clientPagLength}>{project.projectName.split(" ")[0].substring(0, 10)}</Cell>
                                     <Cell
                                         size={HOURSLength}
-                                        align="space-around"
+                                        justify="space-around"
                                     >
                                         {totalHrsProject}
                                     </Cell>
                                     <Cell
                                         size={AMOUNTLength}
-                                        align="right"
+                                        justify="right"
                                     >
                                         {totalAmountProject.toFixed(2)}
                                     </Cell>
                                     <Cell
                                         size={AMOUNTLength}
-                                        align="right"
+                                        justify="right"
                                     >
                                         {(totalAmountProject * 0.23).toFixed(2)}
                                     </Cell>
                                     <Cell
                                         size={AMOUNTLength}
-                                        align="right"
+                                        justify="right"
                                     >
                                         {(totalAmountProject * 1.23).toFixed(2)}
                                     </Cell>
@@ -91,22 +91,22 @@ export const SummaryTab = ({ projects, tasksWorkDays, preview }: ISummaryTabProp
                     <Cell size={clientPagLength}></Cell>
                     <Cell
                         size={HOURSLength}
-                        align="space-around"
+                        justify="space-around"
                         style={{ backgroundColor: '#dedede', fontWeight: "bold" }}
                     >{totalHrs}</Cell>
                     <Cell
                         size={AMOUNTLength}
-                        align="right"
+                        justify="right"
                         style={{ backgroundColor: '#dedede', fontWeight: "bold" }}
                     >{totalAmount.toFixed(2)}</Cell>
                     <Cell
                         size={AMOUNTLength}
-                        align="right"
+                        justify="right"
                         style={{ backgroundColor: '#dedede', fontWeight: "bold" }}
                     >{(totalAmount * 0.23).toFixed(2)}</Cell>
                     <Cell
                         size={AMOUNTLength}
-                        align="right"
+                        justify="right"
                         style={{ backgroundColor: '#dedede', fontWeight: "bold" }}
                     >{(totalAmount * 1.23).toFixed(2)}</Cell>
                 </Row>

@@ -1,12 +1,10 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import { lazy, Suspense } from 'react'; 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import ToolBar from './components/ToolBar';
-import { lazy, Suspense } from 'react'; 
 
-const TimeSheet = lazy(() => import('rom/TimeSheet'));
-const Projects = lazy(() => import('rom-project/Project'));
+const TimeSheet = lazy(() => import('rom_timesheet/TimeSheet'));
+const Projects = lazy(() => import('rom_project/Project'));
 
 
 const Main = () => <div>Main</div>;

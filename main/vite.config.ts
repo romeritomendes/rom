@@ -14,10 +14,10 @@ export default defineConfig({
     react(),
     federation({
       name: 'rom',
-      filename: 'remoteEntry.js',
+      // filename: 'remoteEntry.js',
       remotes: {
-        rom:            'http://localhost:4173/assets/remoteEntry.js',
-        "rom-project":  'http://localhost:4174/assets/remoteEntry.js',
+        rom_timesheet:    'http://localhost:4173/assets/remoteEntry.js',
+        rom_project:      'http://localhost:4174/assets/remoteEntry.js',
       },
       shared: {
         ...deps,
