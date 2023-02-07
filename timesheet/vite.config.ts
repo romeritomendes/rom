@@ -5,6 +5,16 @@ import path from 'path';
 
 const deps = require("./package.json").dependencies;
 
+const outputDir = () => {
+
+  const basename = path.basename(__dirname);
+  const sufix = `nginx/www/${basename}.mycompany.com/public_html`;
+
+  const dirname = __dirname.replace(basename, sufix);
+
+  return dirname;
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
     optimizeDeps: {
@@ -37,7 +47,7 @@ export default defineConfig({
       }),
     ],
     build: {
-      outDir: path.join(__dirname, 'build'),
+      outDir: outputDir(),
       target: 'esnext',
       minify: false,
       cssCodeSplit: false,

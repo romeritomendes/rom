@@ -5,8 +5,22 @@ import path from 'path';
 
 const deps = require("./package.json").dependencies;
 
+
+const outputDir = () => {
+
+  const basename = path.basename(__dirname);
+  const sufix = `nginx/www/${basename}.mycompany.com/public_html`;
+
+  const dirname = __dirname.replace(basename, sufix);
+
+  return dirname;
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    hmr: false,
+  },
   optimizeDeps: {
     exclude: ['mono'],
   },
@@ -16,8 +30,8 @@ export default defineConfig({
       name: 'rom',
       // filename: 'remoteEntry.js',
       remotes: {
-        rom_timesheet:    'http://localhost:4173/assets/remoteEntry.js',
-        rom_project:      'http://localhost:4174/assets/remoteEntry.js',
+        rom_timesheet:    'http://timesheet.mycompany.com:6100/assets/remoteEntry.js',
+        rom_project:      'http://project.mycompany.com:6100//assets/remoteEntry.js',
       },
       shared: {
         ...deps,
@@ -35,7 +49,7 @@ export default defineConfig({
     }),
   ],
   build: {
-    outDir: path.join(__dirname, 'build'),
+    outDir: outputDir(),
     target: 'esnext',
     minify: false,
     cssCodeSplit: false,

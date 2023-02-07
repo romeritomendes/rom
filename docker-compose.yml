@@ -1,84 +1,23 @@
 version: "3.9"
 
 services:
-  frontend-main:
-    build:
-      context: ./main
-      dockerfile: Dockerfile
-    image: "${COMPOSE_PROJECT_NAME}-main"
-    container_name: "${COMPOSE_PROJECT_NAME}-main"
-    restart: unless-stopped
+  frontend:
+    image: nginx:stable-alpine
+    container_name: "${COMPOSE_PROJECT_NAME}-frontend-server"
+    #restart: unless-stopped
     ports:
-      - "5100:80"
-    # volumes:
-    #   - ./main:/home/node/app
-    #   - node_modules_frontend_main:/home/node/app/node_modules
+      - "6100:80"
+    volumes:
+      - ./nginx/www:/var/www
+      - ./nginx/config:/etc/nginx/conf.d
     networks:
-      - frontend_network
-    # command: npm start
-
-  # frontend-head:
-  #   build:
-  #     context: ./head
-  #     dockerfile: Dockerfile
-  #   image: "${COMPOSE_PROJECT_NAME}-head"
-  #   container_name: "${COMPOSE_PROJECT_NAME}-head"
-  #   restart: unless-stopped
-  #   ports:
-  #     - "5101:5101"
-  #   volumes:
-  #     - ./head:/home/node/app
-  #     - node_modules_frontend_head:/home/node/app/node_modules
-  #   networks:
-  #     - frontend_network
-  #   command: npm start
-
-  frontend-timesheet:
-    build:
-      context: ./timesheet
-      dockerfile: Dockerfile
-    image: "${COMPOSE_PROJECT_NAME}-timesheet"
-    container_name: "${COMPOSE_PROJECT_NAME}-timesheet"
-    restart: unless-stopped
-    depends_on:
-      - frontend-main
-    ports:
-      - "4173:80"
-    # volumes:
-    #   - ./timesheet:/home/node/app
-    #   - node_modules_frontend_timesheet:/home/node/app/node_modules
-    networks:
-      - frontend_network
-    # command: npm start
-
-  frontend-project:
-    build:
-      context: ./project
-      dockerfile: Dockerfile
-    image: "${COMPOSE_PROJECT_NAME}-project"
-    container_name: "${COMPOSE_PROJECT_NAME}-project"
-    restart: unless-stopped
-    ports:
-      - "4174:80"
-      # - "5173:5173" # DEV TESTE
-    # volumes:
-    #   - ./project:/home/node/app
-    #   - node_modules_frontend_project:/home/node/app/node_modules
-    networks:
-      - frontend_network
-    # command: npm start
+      - nginx_network
+    #command: nginx -g daemon off;
 
 networks:
-  frontend_network:
+  nginx_network:
     driver: bridge
     ipam:
       config:
-        - subnet: 10.5.0.0/16
-          gateway: 10.5.0.1
-          
-
-# volumes:
-  # node_modules_frontend_main:
-  # node_modules_frontend_head:
-  # node_modules_frontend_timesheet:
-  # node_modules_frontend_project:
+        - subnet: 10.6.0.0/16
+          gateway: 10.6.0.1
