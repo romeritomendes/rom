@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 
-nginx
+nginx/www/*
 olds
 
 # Editor directories and files
