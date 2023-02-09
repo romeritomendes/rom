@@ -6,7 +6,6 @@ export const ProtectElement = ({ children }: { children: JSX.Element }) => {
     const location = useLocation();
 
     if(!auth.email) {
-        console.log("aqui")
         return <Navigate to="/login" state={{ from: location }} replace/>;
     }
     

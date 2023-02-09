@@ -9,9 +9,7 @@ function ToolBar() {
     const user = useAuth();
 
     const [sidebar, setSidebar] = useState(false);
-
-    console.log("bar")
-
+    
     return (
         <Container>
             {user.level &&
