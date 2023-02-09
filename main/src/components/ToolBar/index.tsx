@@ -1,33 +1,33 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { FaBars } from "react-icons/fa";
 import Sidebar from "./Sidebar";
+import { useAuth } from "../../context/Auth/useAuth";
 
-interface iToolBar {
-    user?: {
-        email: string;
-        level: number;
-    };
-}
+function ToolBar() {
 
-function ToolBar({ user }: iToolBar) {
+    const user = useAuth();
 
     const [sidebar, setSidebar] = useState(false);
 
+    console.log("bar")
+
     return (
         <Container>
-            <TopBar>
-                <Icon onClick={() => setSidebar(!sidebar)}>
-                    <FaBars />
-                </Icon>
-                <SearchBar></SearchBar>
-                <UserBar>
-                    {user?.email}
-                </UserBar>
-                <CircleBar>
-                    {user?.level}
-                </CircleBar>
-            </TopBar>
+            {user.level &&
+                <TopBar>
+                        <Icon onClick={() => setSidebar(!sidebar)}>
+                            <FaBars />
+                        </Icon>
+                    <SearchBar></SearchBar>
+                    <UserBar>
+                        Oi, {user.email ? user.email : 'Desconhecido' }
+                    </UserBar>
+                    <CircleBar>
+                        {user?.level}
+                    </CircleBar>
+                </TopBar>
+            }
             {   sidebar &&
                     <Sidebar level={user?.level} handleClose={() => setSidebar(false)}/>
             }

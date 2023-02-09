@@ -29,7 +29,7 @@ const Sidebar = ({ handleClose, level } : ISidebar) => {
                             const Icon = item.icon;
                             return (
                                 <Item key={item._id}>
-                                    <Link to={`${item.path}?title=${item.title}`}>
+                                    <Link to={`${item.path}`}>
                                         <CLink onClick={handleClose}>
                                             <div><Icon /></div>
                                             <span>{item.title}</span>

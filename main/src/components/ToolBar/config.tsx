@@ -16,6 +16,14 @@ interface ImenuItens {
 
 export const menuItens : ImenuItens[] = [
     {
+        _id:   -1,
+        title: 'Logout',
+        path:  '/logout',
+        icon:   HiOutlineClipboardList,
+        cName: 'nav-text',
+        level: 1,
+    },
+    {
         _id:   0,
         title: 'TimeSheet',
         path:  '/timesheet',
